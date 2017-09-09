@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,12 +20,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/true_button"/>
+            android:text="@string/true_button"
+            android:id="@+id/true_button"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/false_button"/>
+            android:text="@string/false_button"
+            android:id="@+id/false_button"/>
 
     </LinearLayout>
 
