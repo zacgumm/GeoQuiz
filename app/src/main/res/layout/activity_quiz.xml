@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="24dp"
-        android:text="@string/question_text" />
+        android:id="@+id/question_text_view"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,5 +30,22 @@
             android:id="@+id/false_button"/>
 
     </LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/previous_button"
+        android:src="@drawable/arrow_left"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_button"
+        android:src="@drawable/arrow_right"
+        />
+
+</LinearLayout>
+
 
 </LinearLayout>
