@@ -35,10 +35,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/next_button"
-        android:layout_gravity="bottom|right"
-        android:text="@string/next_button"
-        android:drawableRight="@drawable/arrow_right"
-        android:drawablePadding="4dp"/>
+        android:layout_gravity="bottom|end"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="4dp"
+        android:text="@string/next_button"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@id/previous_button"
+        android:layout_gravity="bottom|start"
+        android:text="@string/previous_button"
+        android:drawableStart="@drawable/arrow_left"
+        android:drawablePadding="4dp"
+        />
 
 
 </FrameLayout>

@@ -42,6 +42,17 @@ public class QuizActivity extends AppCompatActivity {
 
         mQuestionTextView.setText(question);
 
+        if (!mQuestionBank[mCurrentIndex].isQuestionAnswered()) {
+            mTrueButton.setEnabled(true);
+            mFalseButton.setEnabled(true);
+        }
+
+        if (mQuestionBank[mCurrentIndex].isQuestionAnswered()) {
+            mTrueButton.setEnabled(false);
+            mFalseButton.setEnabled(false);
+        }
+
+
     }
 
     private void checkAnswer(boolean userPressedTrue){
@@ -80,7 +91,8 @@ public class QuizActivity extends AppCompatActivity {
 
         if(total >= mQuestionBank.length){
 
-            int percentage = 100 * (score / total);
+            double percentage = 100 * score / total;
+            Log.d(TAG, String.valueOf(percentage));
             String percent = String.valueOf(percentage);
             String message = "Your grade is a " + percent + "%";
             Log.d(TAG, message);
@@ -116,7 +128,7 @@ public class QuizActivity extends AppCompatActivity {
             });
 
 
-        if(mPreviousButton != null){
+
         mPreviousButton = (Button) findViewById(R.id.previous_button);
 
         mPreviousButton.setOnClickListener(new View.OnClickListener(){
@@ -126,7 +138,7 @@ public class QuizActivity extends AppCompatActivity {
                updateQuestion();
            }
         });
-        }
+
 
         mTrueButton = (Button) findViewById(R.id.true_button);
 
@@ -135,7 +147,8 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(!mQuestionBank[mCurrentIndex].isQuestionAnswered())
                 checkAnswer(true);
-
+                mTrueButton.setEnabled(false);
+                mFalseButton.setEnabled(false);
             }
 
         });
@@ -149,7 +162,8 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(!mQuestionBank[mCurrentIndex].isQuestionAnswered())
                 checkAnswer(false);
-
+                mTrueButton.setEnabled(false);
+                mFalseButton.setEnabled(false);
             }
 
         });
