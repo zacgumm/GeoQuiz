@@ -1,13 +1,13 @@
 package zacha.gumm.geoquiz;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,17 +17,20 @@ public class QuizActivity extends AppCompatActivity {
     private Button mFalseButton;
     private Button mNextButton;
     private Button mPreviousButton;
+    private Button mCheatButton;
     private TextView mQuestionTextView;
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final int REQUEST_CODE_CHEAT = 0;
+    private static Question currentQuestion;
 
     private Question[] mQuestionBank = new Question[]{
-            new Question(R.string.question_australia, true, false),
-            new Question(R.string.question_oceans, true, false),
-            new Question(R.string.question_mideast, false, false),
-            new Question(R.string.question_africa, false, false),
-            new Question(R.string.question_americas, true, false),
-            new Question(R.string.question_asia, true, false),
+            new Question(R.string.question_australia, true, false, false),
+            new Question(R.string.question_oceans, true, false, false),
+            new Question(R.string.question_mideast, false, false, false),
+            new Question(R.string.question_africa, false, false, false),
+            new Question(R.string.question_americas, true, false, false),
+            new Question(R.string.question_asia, true, false, false),
     };
 
     private int mCurrentIndex = 0;
@@ -39,7 +42,7 @@ public class QuizActivity extends AppCompatActivity {
         checkProgress();
 
         int question = mQuestionBank[mCurrentIndex].getTextResId();
-
+        currentQuestion = mQuestionBank[mCurrentIndex];
         mQuestionTextView.setText(question);
 
         if (!mQuestionBank[mCurrentIndex].isQuestionAnswered()) {
@@ -60,29 +63,32 @@ public class QuizActivity extends AppCompatActivity {
         int messageResId = 0;
         boolean questionIsAnswered = mQuestionBank[mCurrentIndex].isQuestionAnswered();
 
-        if(!questionIsAnswered) {
-            if (userPressedTrue == answerIsTrue) {
-                messageResId = R.string.correct_toast;
-                score = score + 1;
-                total = total + 1;
-                Log.d(TAG, String.valueOf(score));
-                Log.d(TAG, String.valueOf(total));
-                mQuestionBank[mCurrentIndex].setQuestionAnswered(true);
-            } else {
-                messageResId = R.string.incorrect_toast;
-                total = total + 1;
-                Log.d(TAG, String.valueOf(total));
-                mQuestionBank[mCurrentIndex].setQuestionAnswered(true);
-            }
-            Toast toast = Toast.makeText(this, messageResId, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP, 0, 0);
-            toast.show();
+        if (mQuestionBank[mCurrentIndex].isQuestionCompromised()) {
+            messageResId = R.string.judgment_toast;
+            mQuestionBank[mCurrentIndex].setQuestionCompromised(true);
         }else {
-            messageResId = R.string.question_answered;
-            Toast toast = Toast.makeText(this, messageResId, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP, 0, 0);
-            toast.show();
+            if (!questionIsAnswered) {
+                if (userPressedTrue == answerIsTrue) {
+                    messageResId = R.string.correct_toast;
+                    score = score + 1;
+                    total = total + 1;
+                    Log.d(TAG, String.valueOf(score));
+                    Log.d(TAG, String.valueOf(total));
+                    mQuestionBank[mCurrentIndex].setQuestionAnswered(true);
+                } else {
+                    messageResId = R.string.incorrect_toast;
+                    total = total + 1;
+                    Log.d(TAG, String.valueOf(total));
+                    mQuestionBank[mCurrentIndex].setQuestionAnswered(true);
+                }
+            } else {
+                messageResId = R.string.question_answered;
+            }
         }
+
+        Toast toast = Toast.makeText(this, messageResId, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.show();
     }
 
     private void checkProgress(){
@@ -101,6 +107,7 @@ public class QuizActivity extends AppCompatActivity {
             toast.show();
         }
     }
+
 
 
     @Override
@@ -168,7 +175,34 @@ public class QuizActivity extends AppCompatActivity {
 
         });
 
+        mCheatButton = (Button) findViewById(R.id.cheat_button);
+
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Starts Cheat Activity
+                boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+            }
+        });
+
         updateQuestion();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            if (data == null) {
+                return;
+            }
+            if (CheatActivity.wasAnswerShown(data)) {
+                mQuestionBank[mCurrentIndex].setQuestionCompromised(true);
+            }
+        }
     }
 
     @Override
@@ -193,7 +227,7 @@ public class QuizActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
-        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+
 
     }
 
@@ -209,9 +243,9 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy() called");
     }
 
-    public static Toast makeText(Context context, String resId, int duration) {
-        Toast toast = new Toast(context);
-        return toast;
+
+    public static Question getQuestion() {
+        return currentQuestion;
     }
 
 }

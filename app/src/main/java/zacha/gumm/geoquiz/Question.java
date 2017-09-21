@@ -7,11 +7,13 @@ public class Question {
     private int mTextResId;
     private boolean mAnswerTrue;
     private boolean misAnswered;
+    private boolean mQuestionCompromised;
 
-    public Question(int textResId, boolean answerTrue, boolean isAnswered) {
+    public Question(int textResId, boolean answerTrue, boolean isAnswered, boolean questionCompromised) {
         mTextResId = textResId;
         mAnswerTrue = answerTrue;
         misAnswered = isAnswered;
+        mQuestionCompromised = questionCompromised;
     }
 
     public int getTextResId() {
@@ -36,6 +38,14 @@ public class Question {
 
     public void setQuestionAnswered(boolean isAnswered){
         misAnswered = isAnswered;
+    }
+
+    public boolean isQuestionCompromised() {
+        return mQuestionCompromised;
+    }
+
+    public void setQuestionCompromised(boolean isCompromised) {
+        mQuestionCompromised = isCompromised;
     }
 }
 
