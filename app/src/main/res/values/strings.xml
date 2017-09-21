@@ -18,5 +18,9 @@
     <string name="show_answer_button">Show Answer</string>
     <string name="cheat_button">Cheat!</string>
     <string name="judgment_toast">Cheating is wrong</string>
+    <string name="cheats_remaining_3">3 Cheat Tokens remaining</string>
+    <string name="cheats_remaining_2">2 Cheat Tokens remaining</string>
+    <string name="cheats_remaining_1">1 Cheat Tokens remaining</string>
+    <string name="cheats_remaining_0">No Cheat Tokens remaining</string>
 </resources>
 

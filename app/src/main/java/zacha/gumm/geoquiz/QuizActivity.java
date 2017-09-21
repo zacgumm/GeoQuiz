@@ -19,6 +19,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mPreviousButton;
     private Button mCheatButton;
     private TextView mQuestionTextView;
+    private TextView mCheatsRemainingTextView;
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
     private static final int REQUEST_CODE_CHEAT = 0;
@@ -33,7 +34,16 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_asia, true, false, false),
     };
 
+    private int[] mCheatsBank = new int[]{
+            (R.string.cheats_remaining_0),
+            (R.string.cheats_remaining_1),
+            (R.string.cheats_remaining_2),
+            (R.string.cheats_remaining_3),
+    };
+
+
     private int mCurrentIndex = 0;
+    private static int mCheatsRemaining = 3;
     private int score = 0;
     private int total = 0;
 
@@ -45,6 +55,11 @@ public class QuizActivity extends AppCompatActivity {
         currentQuestion = mQuestionBank[mCurrentIndex];
         mQuestionTextView.setText(question);
 
+        int cheatsLeft = mCheatsBank[mCheatsRemaining];
+        mCheatsRemainingTextView = (TextView) findViewById(R.id.cheats_remaining);
+        assert mCheatsRemainingTextView != null;
+        mCheatsRemainingTextView.setText(cheatsLeft);
+
         if (!mQuestionBank[mCurrentIndex].isQuestionAnswered()) {
             mTrueButton.setEnabled(true);
             mFalseButton.setEnabled(true);
@@ -55,6 +70,9 @@ public class QuizActivity extends AppCompatActivity {
             mFalseButton.setEnabled(false);
         }
 
+        if (mCheatsRemaining < 1) {
+            mCheatButton.setEnabled(false);
+        }
 
     }
 
@@ -184,6 +202,7 @@ public class QuizActivity extends AppCompatActivity {
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
+
             }
         });
 
@@ -247,6 +266,12 @@ public class QuizActivity extends AppCompatActivity {
     public static Question getQuestion() {
         return currentQuestion;
     }
+
+    public static void setCheatsRemaining() {
+        mCheatsRemaining = (mCheatsRemaining - 1);
+        Log.d(TAG, String.valueOf(mCheatsRemaining));
+    }
+
 
 }
 

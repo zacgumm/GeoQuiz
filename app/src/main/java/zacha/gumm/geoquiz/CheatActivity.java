@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.Button;
@@ -19,6 +20,7 @@ public class CheatActivity extends AppCompatActivity {
 
     private boolean mAnswerIsTrue;
     private TextView mAnswerTextView;
+    private TextView mVersionText;
     private Button mShowAnswerButton;
 
 
@@ -47,6 +49,10 @@ public class CheatActivity extends AppCompatActivity {
 
         mAnswerTextView = (TextView) findViewById(R.id.answer_text_view);
 
+        mVersionText = (TextView) findViewById(R.id.version_text);
+        int androidOS = Build.VERSION.SDK_INT;
+        mVersionText.setText(Integer.toString(androidOS));
+
         mShowAnswerButton = (Button) findViewById(R.id.show_answer_button);
         mShowAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +65,9 @@ public class CheatActivity extends AppCompatActivity {
                 setAnswerShownResult(true);
                 Question currentQuestion = QuizActivity.getQuestion();
                 currentQuestion.setQuestionCompromised(true);
+
+                QuizActivity.setCheatsRemaining();
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     int cx = mShowAnswerButton.getWidth() / 2;
                     int cy = mShowAnswerButton.getHeight() / 2;
